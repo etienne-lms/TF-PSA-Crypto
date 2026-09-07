@@ -3,6 +3,29 @@
 #include <stdint.h>
 #include "psa/crypto.h"
 
+#if defined(__ZEPHYR__)
+/* Inclusde Zephyr test header files to override exising macros and leverage
+ * Zephyr test support.
+ */
+#include <zephyr_psa_crypto_tests_overrides.h>
+
+/* Forward declaration to help defining test_suite entry function */
+static int execute_tests(int argc, const char **argv,
+                         char *test_string_id, const char *test_suite_array);
+
+/*
+ * Entry function is exported to the Zephyr application
+ * Return 0 upon success, any non-zero value upon errors.
+ */
+int execute_test_suite_psa_crypto_hash(char *test_string_id, const char *test_suite_array)
+{
+	const char *test_name = "test_suite_psa_crypto";
+	const char **argv = &test_name;
+
+	return execute_tests(0, argv, test_string_id, test_suite_array);
+}
+#endif /* __ZEPHYR__ */
+
 /* END_HEADER */
 
 /* BEGIN_DEPENDENCIES

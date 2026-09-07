@@ -31,10 +31,17 @@
 #define TEST_DRIVER_LOCATION 0x7fffff
 #endif
 
+/* ML_DSA and PQC is not yet supported in Zephyr */
+#if defined(__ZEPHYR__)
+#define PSA_KEY_TYPE_ML_DSA_KEY_PAIR    PSA_ERROR_INVALID_ARGUMENT
+#define PSA_KEY_TYPE_ML_DSA_PUBLIC_KEY  PSA_ERROR_INVALID_ARGUMENT
+#define PSA_ALG_DETERMINISTIC_ML_DSA    PSA_ERROR_INVALID_ARGUMENT
+#else
 /* While ML-DSA is only supported in the lower layers but not in the API,
  * we test that it isn't supported. We do need to know the encoding of
  * key types and algorithms, which is not yet defined in public headers. */
 #include "psa_crypto_mldsa.h"
+#endif /* __ZEPHYR__ */
 
 #if defined(MBEDTLS_THREADING_PTHREAD)
 #include "mbedtls/threading.h"
@@ -47,6 +54,29 @@
  * This serves as a proxy for checking if the operation is aborted. */
 #define ASSERT_OPERATION_IS_ACTIVE(operation) TEST_ASSERT(operation.id != 0)
 #define ASSERT_OPERATION_IS_INACTIVE(operation) TEST_ASSERT(operation.id == 0)
+
+#if defined(__ZEPHYR__)
+/* Inclusde Zephyr test header files to override exising macros and leverage
+ * Zephyr test support.
+ */
+#include <zephyr_psa_crypto_tests_overrides.h>
+
+/* Forward declaration to help defining test_suite entry function */
+static int execute_tests(int argc, const char **argv,
+                         char *test_string_id, const char *test_suite_array);
+
+/*
+ * Entry function is exported to the Zephyr application
+ * Return 0 upon success, any non-zero value upon errors.
+ */
+int execute_test_suite_psa_crypto(char *test_string_id, const char *test_suite_array)
+{
+	const char *test_name = "test_suite_psa_crypto";
+	const char **argv = &test_name;
+
+	return execute_tests(0, argv, test_string_id, test_suite_array);
+}
+#endif /* __ZEPHYR__ */
 
 /** An invalid export length that will never be set by psa_export_key(). */
 static const size_t INVALID_EXPORT_LENGTH = ~0U;

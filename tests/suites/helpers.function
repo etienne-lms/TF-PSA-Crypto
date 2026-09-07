@@ -5,7 +5,9 @@
 #include <test/arguments.h>
 #include <test/helpers.h>
 #include <test/macros.h>
+#ifndef __ZEPHYR__
 #include <test/random.h>
+#endif /* __ZEPHYR__ */
 #include <test/bignum_helpers.h>
 #include <test/psa_crypto_helpers.h>
 #include <test/threading_helpers.h>
