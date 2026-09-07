@@ -32,7 +32,7 @@
 #endif
 
 /* If this comes up, it's a bug in the test code or in the test data. */
-#define UNUSED 0xdeadbeef
+#define UNUSED_VALUE 0xdeadbeef
 
 /* Assert that an operation is (not) active.
  * This serves as a proxy for checking if the operation is aborted. */
