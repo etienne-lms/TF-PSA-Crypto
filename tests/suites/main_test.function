@@ -147,7 +147,7 @@ typedef void (*TestWrapper_t)(void **param_array);
  *              __MBEDTLS_TEST_TEMPLATE__GENERATOR_SCRIPT
  *
  */
-TestWrapper_t test_funcs[] =
+static TestWrapper_t test_funcs[] =
 {
     __MBEDTLS_TEST_TEMPLATE__DISPATCH_CODE
 #line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
@@ -172,9 +172,11 @@ static int dispatch_test(size_t func_idx, void **params)
     if (func_idx < (int) (sizeof(test_funcs) / sizeof(TestWrapper_t))) {
         fp = test_funcs[func_idx];
         if (fp) {
+#if !defined(__ZEPHYR__)
             #if defined(MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG)
             mbedtls_test_enable_insecure_external_rng();
             #endif
+#endif /* __ZEPHYR__ */
 
             fp(params);
 
@@ -228,6 +230,7 @@ __MBEDTLS_TEST_TEMPLATE__PLATFORM_CODE
 /* Main Test code */
 
 
+#if !defined(__ZEPHYR__)
 /**
  * \brief       Program main. Invokes platform specific execute_tests().
  *
@@ -270,3 +273,4 @@ int main(int argc, const char *argv[])
     mbedtls_test_platform_teardown();
     return ret;
 }
+#endif /* __ZEPHYR__ */

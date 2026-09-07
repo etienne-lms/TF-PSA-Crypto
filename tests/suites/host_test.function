@@ -517,10 +517,17 @@ static void try_chdir_if_supported(const char *argv0)
  *
  * \return      Program exit status.
  */
+#if defined(__ZEPHYR__)
+static int execute_tests(int argc, const char **argv,
+                         char *test_string_id, const char *test_suite_array)
+#else
 static int execute_tests(int argc, const char **argv)
+#endif /* __ZEPHYR__ */
 {
     /* Local Configurations and options */
+#if !defined(__ZEPHYR__)
     const char *default_filename = "DATA_FILE";
+#endif /* __ZEPHYR__ */
     const char *test_filename = NULL;
     const char **test_files = NULL;
     size_t testfile_count = 0;
@@ -528,8 +535,10 @@ static int execute_tests(int argc, const char **argv)
     size_t function_id = 0;
 
     /* Other Local variables */
+#if !defined(__ZEPHYR__)
     int arg_index = 1;
     const char *next_arg;
+#endif /* __ZEPHYR__ */
     size_t testfile_index, i, cnt;
     unsigned total_errors = 0, total_tests = 0, total_skipped = 0;
     FILE *file;
@@ -541,12 +550,18 @@ static int execute_tests(int argc, const char **argv)
 #if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
     int stdout_fd = -1;
 #endif /* __unix__ || __APPLE__ __MACH__ */
+#if !defined(__ZEPHYR__)
     const char *outcome_file_name = getenv("MBEDTLS_TEST_OUTCOME_FILE");
+#endif /* __ZEPHYR__ */
     FILE *outcome_file = NULL;
 
 #if defined(MBEDTLS_MEMORY_BUFFER_ALLOC_C) && \
     !defined(TEST_SUITE_MEMORY_BUFFER_ALLOC)
+#if defined(__ZEPHYR__)
+    unsigned char alloc_buf[32000];
+#else
     unsigned char alloc_buf[1000000];
+#endif
     mbedtls_memory_buffer_alloc_init(alloc_buf, sizeof(alloc_buf));
 #endif
 
@@ -565,6 +580,7 @@ static int execute_tests(int argc, const char **argv)
         return 1;
     }
 
+#if !defined(__ZEPHYR__)
     /*
      * Make sure we have a snprintf that correctly zero-terminates
      */
@@ -579,6 +595,7 @@ static int execute_tests(int argc, const char **argv)
             mbedtls_fprintf(stderr, "Unable to open outcome file. Continuing anyway.\n");
         }
     }
+#endif /* !__ZEPHYR__ */
 
     line.size = 8192;
     line.content = mbedtls_calloc(1, line.size);
@@ -587,6 +604,13 @@ static int execute_tests(int argc, const char **argv)
         mbedtls_exit(MBEDTLS_EXIT_FAILURE);
     }
 
+#if defined(__ZEPHYR__)
+    const char *test_files_array[] = {
+	test_suite_array,
+    };
+    test_files = test_files_array;
+    testfile_count = 1;
+#else
     while (arg_index < argc) {
         next_arg = argv[arg_index];
 
@@ -614,6 +638,7 @@ static int execute_tests(int argc, const char **argv)
         test_files = &default_filename;
         testfile_count = 1;
     }
+#endif /* __ZEPHYR__ */
 
     /* Initialize the struct that holds information about the last test */
     mbedtls_test_info_reset();

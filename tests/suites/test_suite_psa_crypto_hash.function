@@ -3,6 +3,29 @@
 #include <stdint.h>
 #include "psa/crypto.h"
 
+#if defined(__ZEPHYR__)
+/* Inclusde Zephyr test header files to override exising macros and leverage
+ * Zephyr test support.
+ */
+#include <zephyr_psa_crypto_tests_overrides.h>
+
+/* Forward declaration to help defining test_suite entry function */
+static int execute_tests(int argc, const char **argv,
+                         char *test_string_id, const char *test_suite_array);
+
+/*
+ * Entry function is exported to the Zephyr application
+ * Return 0 upon success, any non-zero value upon errors.
+ */
+int execute_test_suite_psa_crypto_hash(char *test_string_id, const char *test_suite_array)
+{
+	const char *test_name = "test_suite_psa_crypto";
+	const char **argv = &test_name;
+
+	return execute_tests(0, argv, test_string_id, test_suite_array);
+}
+#endif /* __ZEPHYR__ */
+
 /* END_HEADER */
 
 /* BEGIN_DEPENDENCIES
@@ -130,6 +153,17 @@ void hash_multi_part(int alg_arg, data_t *input, data_t *expected_hash)
         PSA_ASSERT(psa_hash_finish(&operation,
                                    actual_hash, sizeof(actual_hash),
                                    &actual_hash_length));
+
+#ifdef __ZEPHYR__
+	if ((expected_hash->len != actual_hash_length) ||
+	    memcmp(actual_hash, expected_hash->x, actual_hash_length) != 0) {
+		printf("actual size %zu / expected size %zu\n",
+		       actual_hash_length, expected_hash->len);
+		dump("actual", actual_hash, actual_hash_length);
+		dump("expected", expected_hash->x, expected_hash->len);
+	}
+#endif /* __ZEPHYR__ */
+
         TEST_MEMORY_COMPARE(expected_hash->x, expected_hash->len,
                             actual_hash, actual_hash_length);
 
