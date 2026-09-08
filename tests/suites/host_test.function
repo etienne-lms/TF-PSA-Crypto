@@ -580,7 +580,7 @@ static int execute_tests(int argc, const char **argv)
         }
     }
 
-    line.size = 256;
+    line.size = 8192;
     line.content = mbedtls_calloc(1, line.size);
     if (line.content == NULL) {
         fprintf(stderr, "FATAL: failed to allocate %zu bytes\n", line.size);
