@@ -1,4 +1,4 @@
-#line 2 "suites/main_test.function"
+//#line 2 "suites/main_test.function"
 /*
  * *** THIS FILE HAS BEEN MACHINE GENERATED ***
  *
@@ -48,7 +48,7 @@
 
 __MBEDTLS_TEST_TEMPLATE__TEST_COMMON_HELPERS
 
-#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
+//#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
 
 
 /*----------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ __MBEDTLS_TEST_TEMPLATE__TEST_COMMON_HELPERS
 
 __MBEDTLS_TEST_TEMPLATE__FUNCTIONS_CODE
 
-#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
+//#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
 
 
 /*----------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ static int get_expression(int32_t exp_id, intmax_t *out_value)
 
     switch (exp_id) {
     __MBEDTLS_TEST_TEMPLATE__EXPRESSION_CODE
-#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
+//#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
         default:
         {
             ret = KEY_VALUE_MAPPING_NOT_FOUND;
@@ -117,7 +117,7 @@ static int dep_check(int dep_id)
 
     switch (dep_id) {
     __MBEDTLS_TEST_TEMPLATE__DEP_CHECK_CODE
-#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
+//#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
         default:
             break;
     }
@@ -150,7 +150,7 @@ typedef void (*TestWrapper_t)(void **param_array);
 static TestWrapper_t test_funcs[] =
 {
     __MBEDTLS_TEST_TEMPLATE__DISPATCH_CODE
-#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
+//#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
 };
 
 /**
@@ -224,7 +224,7 @@ static int check_test(size_t func_idx)
 
 __MBEDTLS_TEST_TEMPLATE__PLATFORM_CODE
 
-#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
+//#line __MBEDTLS_TEST_TEMPLATE__LINE_NO "suites/main_test.function"
 
 /*----------------------------------------------------------------------------*/
 /* Main Test code */
